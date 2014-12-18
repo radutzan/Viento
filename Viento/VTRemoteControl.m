@@ -11,8 +11,6 @@
 
 @interface VTRemoteControl () <UIScrollViewDelegate>
 
-@property (nonatomic, strong) UIView *controlledDot;
-
 @end
 
 @implementation VTRemoteControl
@@ -39,7 +37,12 @@ static VTRemoteControl *sharedRemoteControl = nil;
 {
     [super viewDidAppear:animated];
     
-    self.controlScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height - 44)];
+    UIView *remoteSizeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 240, 330)];
+    remoteSizeView.center = self.view.center;
+    remoteSizeView.clipsToBounds = NO;
+    [self.view addSubview:remoteSizeView];
+    
+    self.controlScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 240, 280)];
     self.controlScrollView.contentSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
     self.controlScrollView.contentOffset = CGPointMake(100000, 100000);
     self.controlScrollView.backgroundColor = [UIColor darkGrayColor];
@@ -48,20 +51,21 @@ static VTRemoteControl *sharedRemoteControl = nil;
     self.controlScrollView.showsVerticalScrollIndicator = NO;
     self.controlScrollView.scrollsToTop = NO;
     self.controlScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
-    [self.view addSubview:self.controlScrollView];
+    self.controlScrollView.panGestureRecognizer.delaysTouchesBegan = NO;
+    [remoteSizeView addSubview:self.controlScrollView];
     
     _previousOffset = self.controlScrollView.contentOffset;
     
-    UITapGestureRecognizer *scrollViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped)];
+    UITapGestureRecognizer *scrollViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped:)];
     [self.controlScrollView addGestureRecognizer:scrollViewTap];
     
     UIScreenEdgePanGestureRecognizer *rightEdgeSwipe = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgePanRecognized:)];
     rightEdgeSwipe.edges = UIRectEdgeRight;
-    [self.controlScrollView addGestureRecognizer:rightEdgeSwipe];
+    [self.view addGestureRecognizer:rightEdgeSwipe];
     
-    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44)];
+    UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, remoteSizeView.bounds.size.height - 50, remoteSizeView.bounds.size.width, 50)];
     toolbar.barStyle = UIBarStyleBlack;
-    [self.view addSubview:toolbar];
+    [remoteSizeView addSubview:toolbar];
     
     UIBarButtonItem *backButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"Back" style:UIBarButtonItemStylePlain target:self action:@selector(backButtonTapped)];
     UIBarButtonItem *spacer1 = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
@@ -71,15 +75,20 @@ static VTRemoteControl *sharedRemoteControl = nil;
     
     toolbar.items = @[backButtonItem, spacer1, homeButtonItem, spacer2, playButtonItem];
     
-    self.controlledDot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
-    self.controlledDot.center = CGPointMake(self.view.center.x, self.view.center.y / 2);
-    self.controlledDot.backgroundColor = [UIColor greenColor];
-//    [self.view addSubview:self.controlledDot];
-}
-
-- (void)resetDot
-{
-    self.controlledDot.center = CGPointMake(self.view.center.x, self.view.center.y / 2);
+    CALayer *borderLayer = [CALayer new];
+    borderLayer.frame = remoteSizeView.bounds;
+    borderLayer.borderWidth = 0.5;
+    borderLayer.borderColor = [UIColor colorWithWhite:1 alpha:.15].CGColor;
+    [remoteSizeView.layer addSublayer:borderLayer];
+    
+    UILabel *aboutTheSize = [[UILabel alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 70, remoteSizeView.bounds.size.width, 70)];
+    aboutTheSize.center = CGPointMake(self.view.center.x, aboutTheSize.center.y);
+    aboutTheSize.font = [UIFont systemFontOfSize:11];
+    aboutTheSize.textAlignment = NSTextAlignmentCenter;
+    aboutTheSize.textColor = [UIColor colorWithWhite:.4 alpha:1];
+    aboutTheSize.text = @"Simulated size of the proposed\nremote control touch surface.";
+    aboutTheSize.numberOfLines = 0;
+    [self.view addSubview:aboutTheSize];
 }
 
 - (void)edgePanRecognized:(UIScreenEdgePanGestureRecognizer *)recognizer
@@ -96,12 +105,9 @@ static VTRemoteControl *sharedRemoteControl = nil;
 
 - (void)setSpecialScrollSize:(CGSize)size
 {
-//    self.controlScrollView.delegate = nil;
     self.controlScrollView.contentOffset = CGPointZero;
     self.controlScrollView.contentSize = size;
     NSLog(@"%@: Setting special scroll size to: %@", NSStringFromClass([self class]), NSStringFromCGSize(size));
-    [self resetDot];
-//    self.controlScrollView.delegate = self;
 }
 
 - (void)resetScrollSize
@@ -109,56 +115,49 @@ static VTRemoteControl *sharedRemoteControl = nil;
     self.controlScrollView.contentSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
     self.controlScrollView.contentOffset = CGPointMake(100000, 100000);
     NSLog(@"%@: Resetting scroll size", NSStringFromClass([self class]));
-    [self resetDot];
 }
 
 - (void)scrollViewDidScroll:(UIScrollView *)scrollView
 {
     CGPoint offset = CGPointMake(scrollView.contentOffset.x - _previousOffset.x, scrollView.contentOffset.y - _previousOffset.y);
-    
-    self.controlledDot.center = CGPointMake(self.controlledDot.center.x - offset.x, self.controlledDot.center.y - offset.y);
-    
-    if ([[UIScreen screens] count] > 1) {
-        [self.externalScreenController remoteControlScrollMovedWithOffset:offset];
-    }
-    
     _previousOffset = scrollView.contentOffset;
+    
+    [self.externalScreenController remoteControlScrollMovedWithOffset:offset];
 }
 
 - (void)scrollViewWillBeginDragging:(UIScrollView *)scrollView
 {
-    self.controlledDot.backgroundColor = [UIColor orangeColor];
-    [self.externalScreenController remoteControlScrollViewWillBeginDragging];
+    // Touch point is delivered using the unit coordinate space, like CALayer's anchorPoint
+    CGPoint touchLocation = [scrollView.panGestureRecognizer locationInView:scrollView.superview];
+    CGPoint relativePoint = CGPointMake(touchLocation.x / scrollView.bounds.size.width, touchLocation.y / scrollView.bounds.size.height);
+    
+    [self.externalScreenController remoteControlScrollViewWillBeginDraggingFromPoint:relativePoint];
 }
 
 - (void)scrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    self.controlledDot.backgroundColor = [UIColor greenColor];
     [self.externalScreenController remoteControlScrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
 }
 
 #pragma mark - Buttons
 
-- (void)scrollViewTapped
+- (void)scrollViewTapped:(UITapGestureRecognizer *)recognizer
 {
     [self.externalScreenController remoteControlClicked];
 }
 
 - (void)backButtonTapped
 {
-    [self resetDot];
     [self.externalScreenController remoteControlBackButtonClicked];
 }
 
 - (void)homeButtonTapped
 {
-    [self resetDot];
     [self.externalScreenController remoteControlHomeButtonClicked];
 }
 
 - (void)playPauseButtonTapped
 {
-    [self resetDot];
     [self.externalScreenController remoteControlPlayPauseButtonClicked];
 }
 

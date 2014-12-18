@@ -12,7 +12,7 @@
 @interface VTExternalViewController : UIViewController
 
 // Event receivers: DO NOT OVERRIDE
-- (void)remoteControlScrollViewWillBeginDragging;
+- (void)remoteControlScrollViewWillBeginDraggingFromPoint:(CGPoint)relativeTouchPoint;
 - (void)remoteControlScrollMovedWithOffset:(CGPoint)offset;
 - (void)remoteControlScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)remoteControlSwipedFromRightEdge;
@@ -23,6 +23,7 @@
 
 // Handlers: override these!
 - (void)handleScrollWillBeginTracking;
+- (void)handleScrollWillBeginTrackingFromPoint:(CGPoint)relativeTouchPoint;
 - (void)handleScrollWithOffset:(CGPoint)offset;
 - (void)handleScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)handleClick;

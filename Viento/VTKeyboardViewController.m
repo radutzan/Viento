@@ -11,17 +11,18 @@
 @interface VTKeyboardViewController ()
 
 @property (nonatomic, strong) UIView *buttonContainer;
-@property (nonatomic) CGPoint cursorPosition;
+@property (nonatomic) CGPoint cursorCenter;
 @property (nonatomic, strong) UIButton *preSelectedButton;
 @property (nonatomic, strong) UIButton *selectedButton;
 @property (nonatomic, strong) UIView *selectionIndicator;
-@property (nonatomic, strong) UILabel *typedTextView;
+@property (nonatomic, strong) UITextView *typedTextView;
 
 @end
 
 @implementation VTKeyboardViewController
 
 BOOL _tracking = NO;
+CALayer *_textCursor;
 
 - (void)viewDidLoad
 {
@@ -31,18 +32,25 @@ BOOL _tracking = NO;
     self.selectionIndicator.layer.borderColor = [UIColor whiteColor].CGColor;
     self.selectionIndicator.layer.borderWidth = 2;
     
-    self.typedTextView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 590, 100)];
+    self.typedTextView = [[UITextView alloc] initWithFrame:CGRectMake(0, 0, 590, 100)];
     self.typedTextView.center = CGPointMake(self.typedTextView.center.x, self.view.center.y);
     self.typedTextView.backgroundColor = [UIColor blackColor];
     self.typedTextView.textColor = [UIColor whiteColor];
-    self.typedTextView.font = [UIFont systemFontOfSize:42];
+    self.typedTextView.font = [UIFont systemFontOfSize:44];
     self.typedTextView.text = @"";
+    self.typedTextView.textContainerInset = UIEdgeInsetsMake(22, 15, 0, 0);
     self.typedTextView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.typedTextView.layer.borderWidth = 1;
     self.typedTextView.layer.cornerRadius = 8;
     
+    _textCursor = [CALayer layer];
+    _textCursor.frame = CGRectMake(self.typedTextView.textContainerInset.left, 15, 5, self.typedTextView.bounds.size.height - 30);
+    _textCursor.backgroundColor = [UIColor whiteColor].CGColor;
+    _textCursor.opacity = 0.8;
+    [self.typedTextView.layer addSublayer:_textCursor];
+    
     UILabel *swipeNotice = [[UILabel alloc] initWithFrame:CGRectMake(0, (self.view.bounds.size.height / 6) * 5, self.view.bounds.size.width, self.view.bounds.size.height / 5)];
-    swipeNotice.text = @"Swipe from the right edge to delete (works better if the gesture is short and gentle)";
+    swipeNotice.text = @"Swipe from the right edge of the screen to delete.";
     swipeNotice.textColor = [UIColor colorWithWhite:.5 alpha:1];
     swipeNotice.numberOfLines = 0;
     swipeNotice.font = [UIFont systemFontOfSize:22];
@@ -129,24 +137,75 @@ BOOL _tracking = NO;
     } completion:nil];
 }
 
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    CABasicAnimation *cursorBlink = [CABasicAnimation animationWithKeyPath:@"opacity"];
+    cursorBlink.fromValue = @0.8;
+    cursorBlink.toValue = @0.2;
+    cursorBlink.duration = 1.0;
+    cursorBlink.autoreverses = YES;
+    cursorBlink.repeatCount = HUGE_VALF;
+    cursorBlink.fillMode = kCAFillModeBoth;
+    [_textCursor addAnimation:cursorBlink forKey:@"opacityLoop"];
+}
+
+#pragma mark - Typing
+
 - (void)buttonPressed:(UIButton *)button
 {
     self.typedTextView.text = [self.typedTextView.text stringByAppendingString:[button titleForState:UIControlStateNormal]];
+    [self textViewTextChanged];
 }
 
 - (void)spaceButtonPressed
 {
     self.typedTextView.text = [self.typedTextView.text stringByAppendingString:@" "];
+    [self textViewTextChanged];
 }
 
 - (void)clearButtonPressed
 {
     self.typedTextView.text = @"";
+    [self textViewTextChanged];
 }
 
-- (void)handleScrollWillBeginTracking
+- (void)handleRightEdgeSwipeGesture
+{
+    if (self.typedTextView.text.length >= 1) self.typedTextView.text = [self.typedTextView.text stringByReplacingCharactersInRange:NSMakeRange(self.typedTextView.text.length - 1, 1) withString:@""];
+    [self textViewTextChanged];
+}
+
+- (void)textViewTextChanged
+{
+    CGRect sizeRect = [self.typedTextView.text boundingRectWithSize:CGSizeMake(CGFLOAT_MAX, self.typedTextView.bounds.size.height)
+                                                            options:NSStringDrawingUsesLineFragmentOrigin
+                                                         attributes:@{NSFontAttributeName: self.typedTextView.font}
+                                                            context:nil];
+    
+    _textCursor.frame = CGRectMake(self.typedTextView.textContainerInset.left + sizeRect.size.width + 10, _textCursor.frame.origin.y, _textCursor.bounds.size.width, _textCursor.bounds.size.height);
+}
+
+#pragma mark - Scrolling and clicking
+
+- (void)setCursorCenter:(CGPoint)cursorCenter
+{
+    cursorCenter.x = MAX(self.buttonContainer.frame.origin.x + self.selectionIndicator.bounds.size.width / 2, cursorCenter.x);
+    cursorCenter.x = MIN(self.buttonContainer.frame.origin.x + self.buttonContainer.bounds.size.width - self.selectionIndicator.bounds.size.width / 2, cursorCenter.x);
+    cursorCenter.y = MAX(self.buttonContainer.frame.origin.y + self.selectionIndicator.bounds.size.height / 2, cursorCenter.y);
+    cursorCenter.y = MIN(self.buttonContainer.frame.origin.y + self.buttonContainer.bounds.size.height - self.selectionIndicator.bounds.size.height / 2, cursorCenter.y);
+    _cursorCenter = cursorCenter;
+    self.selectionIndicator.center = cursorCenter;
+    
+    self.preSelectedButton = (UIButton *)[self.buttonContainer hitTest:[self.buttonContainer convertPoint:cursorCenter fromView:self.view] withEvent:nil];
+}
+
+- (void)handleScrollWillBeginTrackingFromPoint:(CGPoint)relativeTouchPoint
 {
     _tracking = YES;
+    
+//    self.cursorCenter = CGPointMake(self.buttonContainer.bounds.size.width * relativeTouchPoint.x, self.buttonContainer.bounds.size.height * relativeTouchPoint.y);
 }
 
 - (void)handleScrollWithOffset:(CGPoint)offset
@@ -154,14 +213,7 @@ BOOL _tracking = NO;
     if (!_tracking) return;
     CGFloat accelerationFactor = 2.4;
     
-    CGPoint selectionCenter = CGPointMake(self.selectionIndicator.center.x - offset.x * accelerationFactor, self.selectionIndicator.center.y - offset.y * accelerationFactor);
-    selectionCenter.x = MAX(self.buttonContainer.frame.origin.x + self.selectionIndicator.bounds.size.width / 2, selectionCenter.x);
-    selectionCenter.x = MIN(self.buttonContainer.frame.origin.x + self.buttonContainer.bounds.size.width - self.selectionIndicator.bounds.size.width / 2, selectionCenter.x);
-    selectionCenter.y = MAX(self.buttonContainer.frame.origin.y + self.selectionIndicator.bounds.size.height / 2, selectionCenter.y);
-    selectionCenter.y = MIN(self.buttonContainer.frame.origin.y + self.buttonContainer.bounds.size.height - self.selectionIndicator.bounds.size.height / 2, selectionCenter.y);
-    self.selectionIndicator.center = selectionCenter;
-    
-    self.preSelectedButton = (UIButton *)[self.buttonContainer hitTest:[self.buttonContainer convertPoint:selectionCenter fromView:self.view] withEvent:nil];
+    self.cursorCenter = CGPointMake(self.selectionIndicator.center.x - offset.x * accelerationFactor, self.selectionIndicator.center.y - offset.y * accelerationFactor);
 }
 
 - (void)handleScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
@@ -176,11 +228,6 @@ BOOL _tracking = NO;
 - (void)handleClick
 {
     [self.selectedButton sendActionsForControlEvents:UIControlEventTouchUpInside];
-}
-
-- (void)handleRightEdgeSwipeGesture
-{
-    if (self.typedTextView.text.length >= 1) self.typedTextView.text = [self.typedTextView.text stringByReplacingCharactersInRange:NSMakeRange(self.typedTextView.text.length - 1, 1) withString:@""];
 }
 
 @end

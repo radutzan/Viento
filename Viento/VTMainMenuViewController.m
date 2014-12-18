@@ -33,7 +33,7 @@
     [self.view addSubview:menuTitle];
     
     UILabel *menuDescription = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width / 4, (self.view.bounds.size.height / 4) * 3, self.view.bounds.size.width / 2, self.view.bounds.size.height / 4)];
-    menuDescription.text = @"These demos (including this menu) show how it feels like to operate a TV using direct manipulation.";
+    menuDescription.text = @"These prototypes demonstrate how controls on the TV can be directly manipulated using a remote touch.";
     menuDescription.textColor = [UIColor colorWithWhite:.5 alpha:1];
     menuDescription.numberOfLines = 0;
     menuDescription.font = [UIFont systemFontOfSize:22];
@@ -60,7 +60,7 @@
     [keyboardButton setTitle:@"Keyboard" forState:UIControlStateNormal];
     [keyboardButton addTarget:self action:@selector(keyboardButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     
-    self.buttons = @[movingDotButton, verticalListButton, horizontalBrowsingButton, keyboardButton];
+    self.buttons = @[verticalListButton, horizontalBrowsingButton, keyboardButton];
 }
 
 - (void)setButtons:(NSArray *)buttons

@@ -18,3 +18,12 @@ Viento means wind, which is how your finger will move through the glass once you
 No, I was just looking for a word with V and T in it so my class prefix could be VT, you know, like TV but backwards. It kind of sounds poetic though, doesn't it? Viento.
 
 This is what I imagine I would be answering in an interview about this. Which obviously will never happen.
+
+### Why is the touch area so small?
+I'm trying to simulate the size of the touch surface a real, physical remote, like the one I described on the post, would have. It helps evaluate whether the gestures are effortless enough to perform on a surface of that size; if it works on a 4.7" screen, it doesn't mean it will on a tiny screenless remote, so I decided to account for that.
+
+### Is anything broken?
+Well, it's just a prototype, so nothing really works :) But in terms of the demos, the Horizontal Browsing one is pretty much just wired for a quick demo, if you play with it for too long, you will find some weird glitches.
+
+### Who are you?
+I'm a designer who writes code for iOS. [I have a couple of apps.](http://ondalabs.com/) I'm 23, from Santiago, Chile.

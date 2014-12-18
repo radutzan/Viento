@@ -42,10 +42,11 @@
 
 #pragma mark - Event receivers
 
-- (void)remoteControlScrollViewWillBeginDragging
+- (void)remoteControlScrollViewWillBeginDraggingFromPoint:(CGPoint)relativeTouchPoint
 {
     if ([self shouldWithholdEvents]) return;
     [[self viewControllerToSendEvent] handleScrollWillBeginTracking];
+    [[self viewControllerToSendEvent] handleScrollWillBeginTrackingFromPoint:relativeTouchPoint];
 }
 
 - (void)remoteControlScrollMovedWithOffset:(CGPoint)offset
@@ -93,9 +94,12 @@
 
 #pragma mark - Event handlers
 
+- (void)handleScrollWillBeginTrackingFromPoint:(CGPoint)relativeTouchPoint
+{
+}
+
 - (void)handleScrollWillBeginTracking
 {
-    NSLog(@"%@: Scroll tracking begin handler not used", NSStringFromClass([self class]));
 }
 
 - (void)handleScrollWithOffset:(CGPoint)offset
@@ -105,7 +109,6 @@
 
 - (void)handleScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset
 {
-    NSLog(@"%@: Scroll deceleration handler not used", NSStringFromClass([self class]));
 }
 
 - (void)handleClick
