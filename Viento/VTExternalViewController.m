@@ -115,7 +115,8 @@
         
         // RESET ALL THE HACKS!
         [[VTRemoteControl sharedRemoteControl] resetScrollSize];
-        [VTRemoteControl sharedRemoteControl].controlScrollView.directionalLockEnabled = YES;
+        [VTRemoteControl sharedRemoteControl].controlScrollView.directionalLockEnabled = NO;
+        [VTRemoteControl sharedRemoteControl].controlScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
     } else {
         NSLog(@"%@: Received Back button event, but there's nothing to go back to", NSStringFromClass([self class]));
         return;

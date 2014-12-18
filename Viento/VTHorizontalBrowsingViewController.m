@@ -73,6 +73,12 @@ CGFloat _focusChangeTolerance = 150;
     if (!focusedScrollView) return;
     _focusedScrollView = focusedScrollView;
     
+    if ([focusedScrollView isEqual:self.scrollViews.firstObject]) {
+        [VTRemoteControl sharedRemoteControl].controlScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
+    } else {
+        [VTRemoteControl sharedRemoteControl].controlScrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+    }
+    
     [VTRemoteControl sharedRemoteControl].controlScrollView.contentSize = CGSizeMake(focusedScrollView.contentSize.width, CGFLOAT_MAX);
     [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset = CGPointMake(-[self insetConstantForScrollView:focusedScrollView], [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset.y);
     
@@ -95,10 +101,8 @@ CGFloat _focusChangeTolerance = 150;
     NSLog(@"verticalCursorPosition: %f", verticalCursorPosition);
     
     if (verticalCursorPosition > _focusChangeTolerance * (focusedIndex + 1) && ![self.focusedScrollView isEqual:self.scrollViews.lastObject]) {
-        NSLog(@"detected change to next scrollview: %lu", focusedIndex + 1);
         self.focusedScrollView = self.scrollViews[focusedIndex + 1];
     } else if (verticalCursorPosition < _focusChangeTolerance * focusedIndex && ![self.focusedScrollView isEqual:self.scrollViews.firstObject]) {
-        NSLog(@"detected change to prev scrollview: %lu", focusedIndex - 1);
         self.focusedScrollView = self.scrollViews[focusedIndex - 1];
     }
 }

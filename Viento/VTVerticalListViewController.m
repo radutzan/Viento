@@ -21,6 +21,8 @@ CGFloat _rowHeight = 100;
 
 - (void)viewDidLoad
 {
+    [VTRemoteControl sharedRemoteControl].controlScrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+    
     _datConstant = (self.view.bounds.size.height - _rowHeight) / 2;
     
     self.tableView = [[UITableView alloc] initWithFrame:CGRectMake(500, 0, self.view.bounds.size.width - 520, self.view.bounds.size.height) style:UITableViewStylePlain];

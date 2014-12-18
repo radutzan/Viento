@@ -19,6 +19,7 @@
 		7C3CA0D01A3AC30C005C541E /* VTExternalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C3CA0CF1A3AC30C005C541E /* VTExternalViewController.m */; };
 		7C8E6AAB1A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8E6AAA1A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.m */; };
 		7CC864C31A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CC864C21A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.m */; };
+		7CCE91651A422AA500301024 /* VTKeyboardViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7CCE91641A422AA500301024 /* VTKeyboardViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -56,6 +57,8 @@
 		7C8E6AAA1A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHorizontalBrowsingViewController.m; sourceTree = "<group>"; };
 		7CC864C11A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTHorizontalScrollViewWithStuff.h; sourceTree = "<group>"; };
 		7CC864C21A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTHorizontalScrollViewWithStuff.m; sourceTree = "<group>"; };
+		7CCE91631A422AA500301024 /* VTKeyboardViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VTKeyboardViewController.h; sourceTree = "<group>"; };
+		7CCE91641A422AA500301024 /* VTKeyboardViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VTKeyboardViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -104,7 +107,7 @@
 				7C3CA0CE1A3AC30C005C541E /* VTExternalViewController.h */,
 				7C3CA0CF1A3AC30C005C541E /* VTExternalViewController.m */,
 				7CD3DD691A40B494002584BD /* Demos */,
-				7CD3DD6A1A40B49F002584BD /* CoverFlow Stuff */,
+				7CD3DD6A1A40B49F002584BD /* Other views */,
 				7C3CA0B51A3AB90F005C541E /* Images.xcassets */,
 				7C3CA0B71A3AB90F005C541E /* LaunchScreen.xib */,
 				7C3CA0A81A3AB90F005C541E /* Supporting Files */,
@@ -149,17 +152,19 @@
 				7C1144DD1A3CBEEE005C527D /* VTVerticalListViewController.m */,
 				7C8E6AA91A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.h */,
 				7C8E6AAA1A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.m */,
+				7CCE91631A422AA500301024 /* VTKeyboardViewController.h */,
+				7CCE91641A422AA500301024 /* VTKeyboardViewController.m */,
 			);
 			name = Demos;
 			sourceTree = "<group>";
 		};
-		7CD3DD6A1A40B49F002584BD /* CoverFlow Stuff */ = {
+		7CD3DD6A1A40B49F002584BD /* Other views */ = {
 			isa = PBXGroup;
 			children = (
 				7CC864C11A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.h */,
 				7CC864C21A41EC40008E1216 /* VTHorizontalScrollViewWithStuff.m */,
 			);
-			name = "CoverFlow Stuff";
+			name = "Other views";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -268,6 +273,7 @@
 				7C3CA0AE1A3AB90F005C541E /* AppDelegate.m in Sources */,
 				7C3CA0AB1A3AB90F005C541E /* main.m in Sources */,
 				7C8E6AAB1A3E8C1B00E06F90 /* VTHorizontalBrowsingViewController.m in Sources */,
+				7CCE91651A422AA500301024 /* VTKeyboardViewController.m in Sources */,
 				7C1144DB1A3CBE92005C527D /* VTMovingDotDemoViewController.m in Sources */,
 				7C1144E11A3CD4B1005C527D /* VTMainMenuViewController.m in Sources */,
 			);

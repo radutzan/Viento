@@ -18,6 +18,8 @@
 
 - (void)viewDidLoad
 {
+    [VTRemoteControl sharedRemoteControl].controlScrollView.decelerationRate = UIScrollViewDecelerationRateNormal;
+    
     self.controlledDot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.controlledDot.backgroundColor = [UIColor whiteColor];
     self.controlledDot.center = self.view.center;

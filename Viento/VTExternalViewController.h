@@ -21,6 +21,7 @@
 - (void)remoteControlPlayPauseButtonClicked;
 
 // Handlers: override these!
+- (void)handleScrollWillBeginTracking;
 - (void)handleScrollWithOffset:(CGPoint)offset;
 - (void)handleScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)handleClick;

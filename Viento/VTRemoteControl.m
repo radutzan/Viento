@@ -47,6 +47,7 @@ static VTRemoteControl *sharedRemoteControl = nil;
     self.controlScrollView.showsHorizontalScrollIndicator = NO;
     self.controlScrollView.showsVerticalScrollIndicator = NO;
     self.controlScrollView.scrollsToTop = NO;
+    self.controlScrollView.decelerationRate = UIScrollViewDecelerationRateFast;
     [self.view addSubview:self.controlScrollView];
     
     _previousOffset = self.controlScrollView.contentOffset;
@@ -69,7 +70,7 @@ static VTRemoteControl *sharedRemoteControl = nil;
     self.controlledDot = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 20, 20)];
     self.controlledDot.center = CGPointMake(self.view.center.x, self.view.center.y / 2);
     self.controlledDot.backgroundColor = [UIColor greenColor];
-    [self.view addSubview:self.controlledDot];
+//    [self.view addSubview:self.controlledDot];
 }
 
 - (void)resetDot
