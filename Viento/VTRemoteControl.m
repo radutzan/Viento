@@ -39,10 +39,9 @@ static VTRemoteControl *sharedRemoteControl = nil;
     
     UIView *remoteSizeView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 240, 330)];
     remoteSizeView.center = self.view.center;
-    remoteSizeView.clipsToBounds = NO;
     [self.view addSubview:remoteSizeView];
     
-    self.controlScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, 240, 280)];
+    self.controlScrollView = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, remoteSizeView.bounds.size.width, remoteSizeView.bounds.size.height - 50)];
     self.controlScrollView.contentSize = CGSizeMake(CGFLOAT_MAX, CGFLOAT_MAX);
     self.controlScrollView.contentOffset = CGPointMake(100000, 100000);
     self.controlScrollView.backgroundColor = [UIColor darkGrayColor];
