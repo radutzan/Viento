@@ -33,7 +33,7 @@
     [self.view addSubview:menuTitle];
     
     UILabel *menuDescription = [[UILabel alloc] initWithFrame:CGRectMake(self.view.bounds.size.width / 4, (self.view.bounds.size.height / 4) * 3, self.view.bounds.size.width / 2, self.view.bounds.size.height / 4)];
-    menuDescription.text = @"These demos (including this menu) show how it feels like to operate a TV using direct manipulation mechanisms.";
+    menuDescription.text = @"These demos (including this menu) show how it feels like to operate a TV using direct manipulation.";
     menuDescription.textColor = [UIColor colorWithWhite:.5 alpha:1];
     menuDescription.numberOfLines = 0;
     menuDescription.font = [UIFont systemFontOfSize:22];

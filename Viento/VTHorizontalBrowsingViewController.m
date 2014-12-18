@@ -60,6 +60,7 @@ CGFloat _focusChangeTolerance = 150;
         scrollView.frame = CGRectMake(0, scrollViewOriginY, self.view.bounds.size.width, scrollView.contentSize.height);
         [self.view addSubview:scrollView];
         scrollView.contentInset = UIEdgeInsetsMake(0, [self insetConstantForScrollView:scrollView], 0, 0);
+        scrollView.contentOffset = CGPointMake(-[self insetConstantForScrollView:scrollView], 0);
         scrollViewOriginY += scrollView.bounds.size.height + interScrollViewSeparation;
     }
     
@@ -80,7 +81,7 @@ CGFloat _focusChangeTolerance = 150;
     }
     
     [VTRemoteControl sharedRemoteControl].controlScrollView.contentSize = CGSizeMake(focusedScrollView.contentSize.width, CGFLOAT_MAX);
-    [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset = CGPointMake(-[self insetConstantForScrollView:focusedScrollView], [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset.y);
+    [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset = CGPointMake(0, [VTRemoteControl sharedRemoteControl].controlScrollView.contentOffset.y);
     
     CGRect selectedItemFrame = CGRectMake([self insetConstantForScrollView:focusedScrollView], focusedScrollView.frame.origin.y, focusedScrollView.itemSize.width, focusedScrollView.itemSize.height);
     self.selectionIndicator.frame = CGRectInset(selectedItemFrame, -self.selectionIndicator.borderWidth, -self.selectionIndicator.borderWidth);
@@ -98,7 +99,7 @@ CGFloat _focusChangeTolerance = 150;
     _verticalCursorPosition = verticalCursorPosition;
     
     NSUInteger focusedIndex = [self.scrollViews indexOfObject:self.focusedScrollView];
-    NSLog(@"verticalCursorPosition: %f", verticalCursorPosition);
+//    NSLog(@"verticalCursorPosition: %f", verticalCursorPosition);
     
     if (verticalCursorPosition > _focusChangeTolerance * (focusedIndex + 1) && ![self.focusedScrollView isEqual:self.scrollViews.lastObject]) {
         self.focusedScrollView = self.scrollViews[focusedIndex + 1];
