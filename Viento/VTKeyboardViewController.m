@@ -184,7 +184,7 @@ CALayer *_textCursor;
                                                          attributes:@{NSFontAttributeName: self.typedTextView.font}
                                                             context:nil];
     
-    _textCursor.frame = CGRectMake(self.typedTextView.textContainerInset.left + sizeRect.size.width + 10, _textCursor.frame.origin.y, _textCursor.bounds.size.width, _textCursor.bounds.size.height);
+    _textCursor.frame = CGRectMake(self.typedTextView.textContainerInset.left + sizeRect.size.width + 7, _textCursor.frame.origin.y, _textCursor.bounds.size.width, _textCursor.bounds.size.height);
 }
 
 #pragma mark - Scrolling and clicking
