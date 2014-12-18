@@ -1,5 +1,5 @@
 # Viento: Direct Manipulation Prototype for Apple TV
-This is the prototype that accompanies my Medium post, [An interface exploration for the Apple TV](http://radu.cl/URLTBDLOL). Don't judge the code, it's just an interaction prototype.
+This is the prototype that accompanies my Medium post, [An interface exploration for the Apple TV](https://medium.com/@radutzan/an-interface-exploration-for-the-apple-tv-fcefc2d19ef2). Don't judge the code, it's just an interaction prototype.
 
 Try out these demos by downloading the source and compiling it to your iOS device. Make sure you've enabled AirPlay Mirroring to your Apple TV _before_ you run the app, or the window might not show up on your TV. Yes, it should work even if you connect Mirroring _after_ launching the app, but it doesn't, and I won't debug it, because it's just a prototype.
 

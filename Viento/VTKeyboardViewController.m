@@ -31,23 +31,31 @@ BOOL _tracking = NO;
     self.selectionIndicator.layer.borderColor = [UIColor whiteColor].CGColor;
     self.selectionIndicator.layer.borderWidth = 2;
     
-    self.typedTextView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 590, 120)];
+    self.typedTextView = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 590, 100)];
     self.typedTextView.center = CGPointMake(self.typedTextView.center.x, self.view.center.y);
     self.typedTextView.backgroundColor = [UIColor blackColor];
     self.typedTextView.textColor = [UIColor whiteColor];
-    self.typedTextView.font = [UIFont systemFontOfSize:54];
+    self.typedTextView.font = [UIFont systemFontOfSize:42];
     self.typedTextView.text = @"";
     self.typedTextView.layer.borderColor = [UIColor whiteColor].CGColor;
     self.typedTextView.layer.borderWidth = 1;
     self.typedTextView.layer.cornerRadius = 8;
+    
+    UILabel *swipeNotice = [[UILabel alloc] initWithFrame:CGRectMake(0, (self.view.bounds.size.height / 6) * 5, self.view.bounds.size.width, self.view.bounds.size.height / 5)];
+    swipeNotice.text = @"Swipe from the right edge to delete (works better if the gesture is short and gentle)";
+    swipeNotice.textColor = [UIColor colorWithWhite:.5 alpha:1];
+    swipeNotice.numberOfLines = 0;
+    swipeNotice.font = [UIFont systemFontOfSize:22];
+    swipeNotice.textAlignment = NSTextAlignmentCenter;
+    [self.view addSubview:swipeNotice];
     
     [self createButtonsWithCharacters:@[@"a", @"b", @"c", @"d", @"e", @"f", @"g", @"h", @"i", @"j", @"k", @"l", @"m", @"n", @"o", @"p", @"q", @"r", @"s", @"t", @"u", @"v", @"w", @"x", @"y", @"z", @"1", @"2", @"3", @"4", @"5", @"6", @"7", @"8", @"9", @"0"]];
 }
 
 - (void)createButtonsWithCharacters:(NSArray *)characters
 {
-    CGSize buttonSize = CGSizeMake(90, 90);
-    self.buttonContainer.frame = CGRectMake(50, 0, buttonSize.width * 6, buttonSize.height * 6);
+    CGSize buttonSize = CGSizeMake(80, 80);
+    self.buttonContainer.frame = CGRectMake(50, 0, buttonSize.width * 6, buttonSize.height * 7);
     CGFloat buttonOriginX = 0;
     CGFloat buttonOriginY = 0;
     
@@ -66,10 +74,24 @@ BOOL _tracking = NO;
         }
     }
     
+    UIButton *spaceButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    spaceButton.frame = CGRectMake(0, buttonOriginY, self.buttonContainer.bounds.size.width / 2, buttonSize.height);
+    spaceButton.titleLabel.font = [UIFont systemFontOfSize:32];
+    [spaceButton setTitle:@"SPACE" forState:UIControlStateNormal];
+    [spaceButton addTarget:self action:@selector(spaceButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.buttonContainer addSubview:spaceButton];
+    
+    UIButton *clearButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    clearButton.frame = CGRectMake(self.buttonContainer.bounds.size.width / 2, buttonOriginY, self.buttonContainer.bounds.size.width / 2, buttonSize.height);
+    clearButton.titleLabel.font = [UIFont systemFontOfSize:32];
+    [clearButton setTitle:@"CLEAR" forState:UIControlStateNormal];
+    [clearButton addTarget:self action:@selector(clearButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+    [self.buttonContainer addSubview:clearButton];
+    
     self.buttonContainer.center = CGPointMake(self.buttonContainer.center.x, self.view.center.y);
     [self.view addSubview:self.buttonContainer];
     
-    self.typedTextView.frame = CGRectOffset(self.typedTextView.frame, self.buttonContainer.frame.origin.x + self.buttonContainer.bounds.size.width + 20, 0);
+    self.typedTextView.frame = CGRectOffset(self.typedTextView.frame, self.buttonContainer.frame.origin.x + self.buttonContainer.bounds.size.width + 60, 0);
     [self.view addSubview:self.typedTextView];
     
     self.preSelectedButton = self.buttonContainer.subviews[0];
@@ -82,6 +104,13 @@ BOOL _tracking = NO;
 - (void)setPreSelectedButton:(UIButton *)preSelectedButton
 {
     if ([_preSelectedButton isEqual:preSelectedButton]) return;
+    
+    if (_preSelectedButton.bounds.size.width != preSelectedButton.bounds.size.width) {
+        [UIView animateWithDuration:.2 delay:0 usingSpringWithDamping:1 initialSpringVelocity:1 options:0 animations:^{
+            self.selectionIndicator.frame = CGRectMake(self.selectionIndicator.frame.origin.x, self.selectionIndicator.frame.origin.y, preSelectedButton.bounds.size.width, preSelectedButton.bounds.size.height);
+        } completion:nil];
+    }
+    
     _preSelectedButton = preSelectedButton;
     
     for (UIButton *button in self.buttonContainer.subviews) {
@@ -102,8 +131,17 @@ BOOL _tracking = NO;
 
 - (void)buttonPressed:(UIButton *)button
 {
-    // append button title to some label or textview
     self.typedTextView.text = [self.typedTextView.text stringByAppendingString:[button titleForState:UIControlStateNormal]];
+}
+
+- (void)spaceButtonPressed
+{
+    self.typedTextView.text = [self.typedTextView.text stringByAppendingString:@" "];
+}
+
+- (void)clearButtonPressed
+{
+    self.typedTextView.text = @"";
 }
 
 - (void)handleScrollWillBeginTracking
@@ -138,6 +176,11 @@ BOOL _tracking = NO;
 - (void)handleClick
 {
     [self.selectedButton sendActionsForControlEvents:UIControlEventTouchUpInside];
+}
+
+- (void)handleRightEdgeSwipeGesture
+{
+    if (self.typedTextView.text.length >= 1) self.typedTextView.text = [self.typedTextView.text stringByReplacingCharactersInRange:NSMakeRange(self.typedTextView.text.length - 1, 1) withString:@""];
 }
 
 @end

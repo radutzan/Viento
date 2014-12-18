@@ -55,6 +55,10 @@ static VTRemoteControl *sharedRemoteControl = nil;
     UITapGestureRecognizer *scrollViewTap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(scrollViewTapped)];
     [self.controlScrollView addGestureRecognizer:scrollViewTap];
     
+    UIScreenEdgePanGestureRecognizer *rightEdgeSwipe = [[UIScreenEdgePanGestureRecognizer alloc] initWithTarget:self action:@selector(edgePanRecognized:)];
+    rightEdgeSwipe.edges = UIRectEdgeRight;
+    [self.controlScrollView addGestureRecognizer:rightEdgeSwipe];
+    
     UIToolbar *toolbar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44)];
     toolbar.barStyle = UIBarStyleBlack;
     [self.view addSubview:toolbar];
@@ -76,6 +80,16 @@ static VTRemoteControl *sharedRemoteControl = nil;
 - (void)resetDot
 {
     self.controlledDot.center = CGPointMake(self.view.center.x, self.view.center.y / 2);
+}
+
+- (void)edgePanRecognized:(UIScreenEdgePanGestureRecognizer *)recognizer
+{
+    if (recognizer.state == UIGestureRecognizerStateBegan) {
+        [self.externalScreenController remoteControlSwipedFromRightEdge];
+        // kill it
+        recognizer.enabled = NO;
+        recognizer.enabled = YES;
+    }
 }
 
 #pragma mark - Scrollview

@@ -60,6 +60,12 @@
     [[self viewControllerToSendEvent] handleScrollViewWillEndDragging:scrollView withVelocity:velocity targetContentOffset:targetContentOffset];
 }
 
+- (void)remoteControlSwipedFromRightEdge
+{
+    if ([self shouldWithholdEvents]) return;
+    [[self viewControllerToSendEvent] handleRightEdgeSwipeGesture];
+}
+
 - (void)remoteControlClicked
 {
     if ([self shouldWithholdEvents]) return;
@@ -121,6 +127,10 @@
         NSLog(@"%@: Received Back button event, but there's nothing to go back to", NSStringFromClass([self class]));
         return;
     }
+}
+- (void)handleRightEdgeSwipeGesture
+{
+    NSLog(@"%@: Right edge swipe handler not used", NSStringFromClass([self class]));
 }
 
 @end

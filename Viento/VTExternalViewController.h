@@ -15,6 +15,7 @@
 - (void)remoteControlScrollViewWillBeginDragging;
 - (void)remoteControlScrollMovedWithOffset:(CGPoint)offset;
 - (void)remoteControlScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
+- (void)remoteControlSwipedFromRightEdge;
 - (void)remoteControlClicked;
 - (void)remoteControlBackButtonClicked;
 - (void)remoteControlHomeButtonClicked;
@@ -25,5 +26,6 @@
 - (void)handleScrollWithOffset:(CGPoint)offset;
 - (void)handleScrollViewWillEndDragging:(UIScrollView *)scrollView withVelocity:(CGPoint)velocity targetContentOffset:(inout CGPoint *)targetContentOffset;
 - (void)handleClick;
+- (void)handleRightEdgeSwipeGesture;
 
 @end
